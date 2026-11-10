@@ -1,0 +1,4 @@
+interface:
+  display_name: "Wirth Review"
+  short_description: "Review PRs and carry findings through correction"
+  default_prompt: "Use $wirth-review to review the identified PR."

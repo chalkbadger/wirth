@@ -1,0 +1,4 @@
+interface:
+  display_name: "Wirth Refinement"
+  short_description: "Refine issues and publish agreed decisions"
+  default_prompt: "Use $wirth-refinement to refine the identified issue."

@@ -1,0 +1,13 @@
+{
+  "name": "wirth",
+  "owner": {
+    "name": "chalkbadger"
+  },
+  "plugins": [
+    {
+      "name": "wirth",
+      "source": ".",
+      "description": "Wirth refinement and review skills"
+    }
+  ]
+}
