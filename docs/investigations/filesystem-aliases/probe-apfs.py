@@ -188,9 +188,12 @@ def main():
         (root / "check.py").write_text("control\n")
         write_contract(root, "check.py", directory="Contracts")
         discovery = {"requested": "contracts", "created": "Contracts", "directory_walk": listing_walk(root, "contracts"),
-                     "requested_object": identity(root / "contracts"), "created_object": identity(root / "Contracts"),
-                     "same_object": os.path.samefile(root / "contracts", root / "Contracts"),
-                     "validator": validate_command(source, root)}
+                     "requested_object": identity(root / "contracts"), "created_object": identity(root / "Contracts")}
+        try:
+            discovery["same_object"] = os.path.samefile(root / "contracts", root / "Contracts")
+        except OSError:
+            discovery["same_object"] = False
+        discovery["validator"] = validate_command(source, root)
         # Rename through an unrelated name so the case change reaches the directory entry.
         (root / "Contracts").rename(root / "temporary")
         (root / "temporary").rename(root / "contracts")
