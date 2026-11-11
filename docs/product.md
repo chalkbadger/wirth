@@ -8,7 +8,7 @@ outstanding verification are tracked in the PR.
 
 Wirth runs inside the developer’s existing coding agent. It helps refine an issue,
 review the implementation against an explicit contract, and preserve the decisions
-behind the change in GitHub. Wirth requires no hosted service or GitHub workflow.
+behind the change in GitHub. Wirth needs no hosted service of its own and no GitHub workflow.
 
 **Refine the issue. Build the change. Review and accept code and contract together.**
 

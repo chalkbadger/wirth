@@ -194,8 +194,7 @@ unrecorded.
 ## Record execution results
 
 For observed runs that compare files, publish the raw before-and-after inventories
-with the comparison output in the PR as each run finishes, unless the run's
-procedure requires holding it.
+with the comparison output in the PR as each run finishes.
 
 Before publishing results, push the commit and put exactly that commit in a new,
 empty directory by any method, such as a Git clone, an archive, an API or a
