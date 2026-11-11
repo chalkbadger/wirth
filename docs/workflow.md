@@ -191,29 +191,6 @@ Once the PR exists, publish earlier local review findings with their locations,
 mismatches, resolutions and reasons; identify any review that was local and
 unrecorded.
 
-## Continuation runs
-
-Use the [continuation prompt](continuation/prompt.md) and
-[answer-key template and scoring rules](continuation/answer-key-template.md).
-
-1. The owner selects a task and writes its key before either run. Keep the key
-   outside the repository and unavailable to the runners until both finish.
-2. Choose one published repository revision and one prompt revision. Run two
-   fresh agent sessions back to back with the same task, prompt, model settings
-   and tool access; only their isolated local output paths differ. Give neither
-   runner the key, prior conversation, or the other run's output. If the selected
-   configuration or required access is unavailable, report the incomplete pair.
-3. Read live issue and PR records; do not freeze them. Each runner works locally
-   with read-only GitHub use. Keep both outputs unpublished until both finish.
-4. After both finish, score against the prewritten key using the template. The
-   owner scores or approves the scores. Publish the key and complete outputs
-   together in the PR, with item scores, task, prompt and code revisions,
-   model/settings, tool access, times, measured effort, gaps and limits.
-   Identify unavailable measurements and observed changes in live discussion.
-5. Review whether the outputs follow the project's rules and scores follow the
-   key. Two runs do not establish statistical reliability or cross-project
-   calibration; same-family models may share blind spots.
-
 ## Record execution results
 
 For observed runs that compare files, publish the raw before-and-after inventories

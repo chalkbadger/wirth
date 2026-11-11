@@ -44,7 +44,7 @@ reviewed PR accepts the change](docs/product.md#acceptance).
 - `wirth validate`, which [checks contract structure only](contracts/claims.md);
   [Usage](docs/usage.md#local-contract-validation) shows how to run it.
 - `wirth check`, which
-  [would run your checks, is not built yet](docs/product.md#verification).
+  [would run your checks, is not built yet](https://github.com/chalkbadger/wirth/issues/17).
 
 ## Why Wirth exists
 
