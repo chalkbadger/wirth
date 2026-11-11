@@ -4,25 +4,13 @@
 
 This is the user-provided product direction. The README describes the current
 implementation and the contracts state what is built and verified; proposals and
-outstanding verification are tracked in the PR. Sections marked **Not yet built**
-describe direction only.
+outstanding verification are tracked in the PR.
 
 Wirth runs inside the developer’s existing coding agent. It helps refine an issue,
 review the implementation against an explicit contract, and preserve the decisions
-behind the change in GitHub.
+behind the change in GitHub. Wirth needs no hosted service of its own and no GitHub workflow.
 
 **Refine the issue. Build the change. Review and accept code and contract together.**
-
-## Installation
-
-**Not yet built.** The [README](../README.md) gives the current usage.
-
-Install the Wirth package into an existing coding agent. It contains two skills—
-**refinement** and **review**—and a model-independent checker, **`wirth check`**.
-
-Connect the agent through the developer’s authenticated GitHub CLI and configure the
-repository’s existing test command. Developers invoke the skills directly in their
-agent. Wirth requires no hosted service or GitHub workflow.
 
 ## Refine the issue
 
@@ -122,26 +110,6 @@ unexpected, or unchecked input or work prevents a success result; Wirth names th
 problem and what remains unresolved. A result's scope is always explicit: structural
 validation does not imply test execution, adequate evidence, successful publication,
 or human acceptance.
-
-## Verification
-
-**Not yet built.** Only structural validation exists, as `wirth validate`; its
-claims are in [Wirth's contract](../contracts/claims.md).
-
-`wirth check` validates contract structure and check references, runs the repository’s
-existing checks, and reports execution results. It runs without a model.
-
-Verification covers the contracts as they would stand after the proposed change.
-Published results identify the code and contract revision checked; they do not
-establish verification of later revisions.
-
-Execution results and evidence adequacy remain separate. The checker reports what ran
-and what passed or failed. Review assesses whether those checks actually demonstrate
-the claims. Human review accepts that assessment.
-
-Missing checks, incomplete results, and broken verification runs never become
-successful verification. Repository checks run without access to model or GitHub
-credentials.
 
 ## Shared decisions
 
