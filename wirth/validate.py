@@ -14,13 +14,9 @@ TEST_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 TESTS_LINE = re.compile(r"Tests: \[(.*?)\]\((.*?)\)")
 # The greedy result leaves the last code span as the test.
 ITEM = re.compile(r"- (.*) `([^`]*)`")
-OLD_ITEM = re.compile(r"- \[[^\]]*\]\([^)]*\): ")
 ISSUE_SHAPE = "Issue: https://github.com/<owner>/<repo>/issues/<positive integer>"
 TESTS_SHAPE = "Tests: [tests/<claim_id>/](../tests/<claim_id>/)"
 ITEM_SHAPE = "- <result> `file::test_name`"
-FORMAT_CHANGED = (f"evidence format changed; expected '{ISSUE_SHAPE}' and '{TESTS_SHAPE}' "
-                  f"under the claim heading, then items '{ITEM_SHAPE}'")
-FILE_ISSUE = f"Issue lines now go under each claim heading; expected '## [id] <claim>' followed by '{ISSUE_SHAPE}'"
 
 
 def _validate_name(name, kind):
@@ -36,8 +32,6 @@ def _resolve_local(root, reference, kind="regular file"):
             raise ValueError("path requires a directory component")
         candidate = current / component
         mode = candidate.lstat().st_mode
-        if stat.S_ISLNK(mode):
-            raise ValueError("symlinks are not allowed")
         # A case-insensitive filesystem resolves wrong spellings; require the exact entry name.
         if component not in os.listdir(current):
             raise ValueError(f"path spelling does not match an existing entry: {component!r}")
@@ -173,13 +167,6 @@ def _contract_errors(root, text, label, seen):
             ids.add(identifier)
             if problem := _text_error(claim):
                 errors.append(f"{number}: claim {problem}")
-        elif line.startswith("Issue:") and claim_at is None:
-            errors.append(f"{number}: {FILE_ISSUE}")
-        elif line.startswith("[") or OLD_ITEM.match(line):
-            needs_evidence = False
-            if claim_at is None:
-                errors.append(f"{number}: evidence must follow a claim heading")
-            errors.append(f"{number}: {FORMAT_CHANGED}")
         elif line.startswith("- "):
             needs_evidence = False
             if claim_at is None:
@@ -227,8 +214,7 @@ def validate():
     contracts = []
     try:
         root = Path.cwd().resolve()
-        # lexists, unlike exists, sees a dangling link so it is reported, not ignored.
-        if os.path.lexists(root / "contracts"):
+        if os.path.exists(root / "contracts"):
             directory = _resolve_local(root, "contracts", kind="directory")
             contracts = sorted(directory.iterdir(), key=lambda path: path.name)
     except (OSError, ValueError) as exc:

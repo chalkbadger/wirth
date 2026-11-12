@@ -1,11 +1,9 @@
 from wirth.validate import validate
-from validator_support import ISSUE, ISSUE_SHAPE, TESTS, TESTS_SHAPE, ValidatorTestCase
+from validator_support import ISSUE, TESTS, ValidatorTestCase
 
 
 ITEM = '- An observation `check.py::test_observation`\n'
 ITEM_SHAPE = "expected '- <result> `file::test_name`', ending with the test in a code span"
-FORMAT_CHANGED = (f"evidence format changed; expected '{ISSUE_SHAPE}' and '{TESTS_SHAPE}' "
-                  "under the claim heading, then items '- <result> `file::test_name`'")
 
 
 class EvidenceItemTests(ValidatorTestCase):
@@ -15,22 +13,6 @@ class EvidenceItemTests(ValidatorTestCase):
                    '- Another result `nested/other.py::test_first`\n\n'
                    + self.claim('second', item='The same test name in its own folder `check.py::test_observation`'))
         self.assertEqual(validate(), [])
-
-    def test_old_one_link_per_line_format_shows_the_new_shape(self):
-        self.write(self.text.replace(ITEM, '- [check.py](../check.py): An observation\n'))
-        self.assertCountEqual(validate(), [f'contracts/one.md:6: {FORMAT_CHANGED}'])
-        self.write('# Old contract\n' + ISSUE + '\n## [complete_contracts] A promise\n'
-                   '- [check.py](../check.py): An observation\n')
-        self.assertCountEqual(validate(), [
-            "contracts/one.md:2: Issue lines now go under each claim heading; expected '## [id] <claim>' "
-            f"followed by '{ISSUE_SHAPE}'",
-            f'contracts/one.md:4: claim must be followed by {ISSUE_SHAPE}',
-            f'contracts/one.md:4: claim must be followed by {TESTS_SHAPE}',
-            f'contracts/one.md:5: {FORMAT_CHANGED}'])
-
-    def test_grouped_file_line_format_shows_the_new_shape(self):
-        self.write(self.text.replace(ITEM, '[check.py](../check.py)\n- An observation `check.py::test_observation`\n'))
-        self.assertCountEqual(validate(), [f'contracts/one.md:6: {FORMAT_CHANGED}'])
 
     def test_item_must_end_with_a_test_code_span(self):
         for item in ['- An observation', '- An observation check.py::test_observation',
