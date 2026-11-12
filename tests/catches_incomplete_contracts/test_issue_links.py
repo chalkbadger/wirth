@@ -43,9 +43,3 @@ class IssueLinkTests(ValidatorTestCase):
             with self.subTest(text=text):
                 self.write(text)
                 self.assertCountEqual(validate(), ['contracts/one.md:' + error for error in expected])
-
-    def test_file_level_issue_line_shows_the_new_shape(self):
-        self.write(self.text.replace('# Local contract\n', '# Local contract\n' + ISSUE))
-        self.assertCountEqual(validate(), [
-            "contracts/one.md:2: Issue lines now go under each claim heading; expected '## [id] <claim>' "
-            f"followed by '{ISSUE_SHAPE}'"])

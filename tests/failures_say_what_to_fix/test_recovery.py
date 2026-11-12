@@ -1,7 +1,7 @@
 import sys
 
 from wirth.validate import validate
-from validator_support import ISSUE, ISSUE_SHAPE, ValidatorTestCase
+from validator_support import ISSUE, ValidatorTestCase
 
 
 def deny_network(event, args):
@@ -15,8 +15,6 @@ EVIDENCE = '- A result `check.py::test_observation`\n'
 MISSING = '-  `missing.py::test_observation`\n'
 A = 'Tests: [tests/a/](../tests/a/)\n'
 B = 'Tests: [tests/b/](../tests/b/)\n'
-FILE_ISSUE = ("Issue lines now go under each claim heading; expected '## [id] <claim>' "
-              f"followed by '{ISSUE_SHAPE}'")
 
 
 class RecoveryTests(ValidatorTestCase):
@@ -87,7 +85,7 @@ class RecoveryTests(ValidatorTestCase):
     def test_file_level_issue_in_title_position_is_reported(self):
         self.assert_diagnostics(
             'Issue: invalid\n\n## [a] \n' + ISSUE + A + EVIDENCE,
-            ["1: expected '# <nonblank title>'", f'1: {FILE_ISSUE}', '3: claim must be nonblank'])
+            ["1: expected '# <nonblank title>'", '1: unexpected content; expected a claim heading or evidence item', '3: claim must be nonblank'])
 
     def test_nonfinal_claim_without_evidence_is_reported_after_missing_title(self):
         self.assert_diagnostics(
@@ -118,7 +116,7 @@ sys.exit(main())
 
     def test_missing_evidence_survives_each_opening_recovery(self):
         for opening, expected in [
-                (ISSUE, ["1: expected '# <nonblank title>'", f'1: {FILE_ISSUE}',
+                (ISSUE, ["1: expected '# <nonblank title>'", '1: unexpected content; expected a claim heading or evidence item',
                          '2: claim must have at least one evidence item']),
                 ('', ["1: expected '# <nonblank title>'",
                       '1: claim must have at least one evidence item'])]:

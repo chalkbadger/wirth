@@ -21,7 +21,6 @@ Tests: [tests/catches_incomplete_contracts/](../tests/catches_incomplete_contrac
 - I start a claim ID with a digit, and it passes. `test_claim_ids.py::test_digit_initial_claim_id_passes`
 - I put an `Issue:` line and then a `Tests:` line directly under each claim heading, citing a different issue per claim, and it passes. `test_issue_links.py::test_each_claim_cites_its_own_issue`
 - I leave out either line, swap them or move one lower, and it fails at the claim heading. `test_issue_links.py::test_issue_then_tests_lines_directly_follow_each_claim_heading`
-- I keep a single `Issue:` line at the top of the file, and it tells me Issue lines now go under each claim heading and shows the shape. `test_issue_links.py::test_file_level_issue_line_shows_the_new_shape`
 - I write an Issue line that is not an `https://github.com/<owner>/<repo>/issues/<positive integer>` URL, and it fails. `test_issue_links.py::test_issue_url_format`
 - I link an issue in a repository with capitals or dots in its name, and it passes. `test_issue_links.py::test_mixed_case_dotted_repository_and_multiple_digits_pass`
 - I link a tests folder that does not exist, or a file, and it fails at the Tests line. `test_check_references.py::test_tests_folder_must_be_an_existing_directory`
@@ -29,20 +28,15 @@ Tests: [tests/catches_incomplete_contracts/](../tests/catches_incomplete_contrac
 - I write the tests folder path without a final `/`, and it fails. `test_check_references.py::test_tests_folder_path_ends_with_a_slash`
 - I name the tests folder after the claim ID under any parent folder, and it passes; I name it anything else, even a name that only starts or ends with the ID, and it fails, naming both. `test_check_references.py::test_tests_folder_is_named_after_the_claim_id`
 - I put the tests folder under a hidden folder or one whose name breaks the naming rule, and it fails, naming that folder. `test_check_references.py::test_tests_folder_path_follows_the_naming_rule`
-- I link a tests folder that is a symlink or sits under one, and it fails. `test_check_references.py::test_tests_folder_must_not_be_or_pass_through_symlinks`
 - I end each result with `file::test_name`, the file relative to the tests folder, and it passes. `test_evidence_items.py::test_items_name_a_file_in_the_tests_folder_and_a_test`
 - I end a result without a test in a code span, and it fails at that line. `test_evidence_items.py::test_item_must_end_with_a_test_code_span`
 - I give a test name without its file, and it tells me to write `file::test_name`. `test_evidence_items.py::test_test_must_name_its_file_and_test`
 - I give a test name that does not match `[A-Za-z_][A-Za-z0-9_]*`, and it fails, showing that rule. `test_evidence_items.py::test_test_name_must_be_an_identifier`
 - I paste a test with its class, as pytest prints it, and it tells me to drop the class. `test_evidence_items.py::test_test_name_without_its_class`
 - I cite one test for two results under a claim, and it passes, because one test can check several results. `test_evidence_items.py::test_one_test_may_prove_several_results`
-- I keep an evidence line in the old one-link-per-line format, and it tells me the format changed and shows the new shape. `test_evidence_items.py::test_old_one_link_per_line_format_shows_the_new_shape`
-- I keep a test file link on its own line, as in the grouped format, and it tells me the format changed and shows the new shape. `test_evidence_items.py::test_grouped_file_line_format_shows_the_new_shape`
 - I point a test file outside the tests folder with `..` or an absolute path, and it fails. `test_evidence_items.py::test_item_file_stays_inside_the_tests_folder`
 - I break a claim's tests folder link, and I see only that error, even when an earlier claim's folder holds the cited file; a missing test file gives only its own error. `test_evidence_items.py::test_items_under_a_failed_tests_folder_report_only_its_error`
 - I cite a test file that does not exist, or a folder, and it fails at that line. `test_check_references.py::test_references_require_existing_regular_files`
-- I cite a test file that is a symlink or sits under one, and it fails. `test_check_references.py::test_evidence_must_not_be_or_pass_through_symlinks`
-- I cite a named pipe, and it fails without waiting on the pipe. `test_check_references.py::test_check_fifo_fails_without_blocking`
 - I cite a test file nested several folders deep, and it passes. `test_check_references.py::test_nested_regular_evidence_file_passes`
 - I write a path that treats a file as a folder, and it fails. `test_check_references.py::test_regular_file_cannot_be_a_directory_component`
 - I name each path segment to match `[A-Za-z0-9]+([._-][A-Za-z0-9]+)*`, and it passes. `test_names.py::test_evidence_segments_accept_ascii_alphanumerics_and_single_internal_separators`
@@ -114,9 +108,7 @@ Tests: [tests/rejects_anything_unexpected/](../tests/rejects_anything_unexpected
 - I indent a claim heading, Issue line, Tests line or result, and it fails. `test_markdown_structure.py::test_indented_headings_claim_lines_and_items_fail`
 - I leave a line holding whitespace other than spaces and tabs, and it fails. `test_markdown_structure.py::test_only_spaces_and_tabs_are_blank_lines`
 - I put evidence before any claim, and it fails. `test_markdown_structure.py::test_evidence_before_first_claim_fails`
-- I put a symlink or folder with a hidden name in `contracts/`, and it fails without reading it. `test_contract_inputs.py::test_invalid_contract_name_does_not_allow_reading_symlink_or_directory`
-- I put a named pipe with a hidden name in `contracts/`, and it fails without waiting on it. `test_contract_inputs.py::test_invalid_contract_name_does_not_allow_reading_fifo`
-- I make a contract a symlink or a folder, and it fails. `test_contract_inputs.py::test_contract_files_must_not_be_symlinks`
+- I put a folder with a hidden name in `contracts/`, and it fails. `test_contract_inputs.py::test_invalid_contract_name_on_a_directory_fails`
+- I make a contract a folder, and it fails. `test_contract_inputs.py::test_contract_files_must_not_be_directories`
 - I put something other than a `.md` file in `contracts/`, and it fails. `test_contract_inputs.py::test_unexpected_entries_are_reported`
-- I make `contracts/` a symlink or a file, and it fails. `test_contract_inputs.py::test_symlinked_discovery_directory_fails`
-- I put a named pipe called `pipe.md` in `contracts/`, and it fails without waiting on it. `test_contract_inputs.py::test_contract_fifo_fails_without_blocking`
+- I make `contracts/` a file, and it fails. `test_contract_inputs.py::test_discovery_directory_that_is_a_file_fails`

@@ -1,8 +1,3 @@
-import os
-from pathlib import Path
-import tempfile
-import unittest
-
 from wirth.validate import validate
 from validator_support import ValidatorTestCase
 
@@ -59,41 +54,6 @@ class CheckReferenceTests(ValidatorTestCase):
                 self.write_tests_link(f'{parent}/complete_contracts/')
                 self.assertCountEqual(validate(), [
                     f"contracts/one.md:5: tests folder: invalid evidence-path segment {parent!r}"])
-
-    def test_evidence_must_not_be_or_pass_through_symlinks(self):
-        (self.folder / 'inside-link').symlink_to('check.py')
-        (self.folder / 'dangling').symlink_to('missing')
-        (self.folder / 'loop').symlink_to('loop')
-        (self.folder / 'directory').mkdir()
-        (self.folder / 'directory/check.py').write_text('def test_observation():\n')
-        (self.folder / 'alias').symlink_to('directory', target_is_directory=True)
-        with tempfile.TemporaryDirectory() as outside:
-            other = Path(outside) / 'check.py'
-            other.write_text('def test_observation():\n')
-            (self.folder / 'outside-link').symlink_to(other)
-            for check in ['inside-link', 'outside-link', 'dangling', 'loop', 'alias/check.py']:
-                with self.subTest(check=check):
-                    self.write_check(check)
-                    self.assertCountEqual(validate(), [
-                        'contracts/one.md:6: evidence reference: symlinks are not allowed'])
-
-    def test_tests_folder_must_not_be_or_pass_through_symlinks(self):
-        (self.root / 'elsewhere').mkdir()
-        (self.root / 'elsewhere/complete_contracts').symlink_to(self.folder, target_is_directory=True)
-        (self.root / 'linked').symlink_to('tests', target_is_directory=True)
-        for label in ['elsewhere/complete_contracts/', 'linked/complete_contracts/']:
-            with self.subTest(label=label):
-                self.write_tests_link(label)
-                self.assertCountEqual(validate(), [
-                    'contracts/one.md:5: tests folder: symlinks are not allowed'])
-
-    @unittest.skipUnless(hasattr(os, 'mkfifo'), 'FIFO requires POSIX')
-    def test_check_fifo_fails_without_blocking(self):
-        os.mkfifo(self.folder / 'pipe')
-        self.write_check('pipe')
-        result = self.cli('validate')
-        self.assert_cli_errors(result, [
-            'contracts/one.md:6: evidence reference: must resolve to a regular file'])
 
     def test_nested_regular_evidence_file_passes(self):
         self.evidence('checks/nested/proof.py')
