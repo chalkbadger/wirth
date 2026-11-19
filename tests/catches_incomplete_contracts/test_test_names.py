@@ -11,7 +11,8 @@ class TestNameTests(ValidatorTestCase):
                         'import x\rdef test_observation():\r',
                         '\ufeffdef test_observation():\n',
                         'async def test_observation():\n',
-                        '"""An example."""\ndef test_observation():\n    pass\n']:
+                        '"""An example."""\ndef test_observation():\n    pass\n',
+                        'def test_observation():\n    pass\nexample = """unfinished\n']:
             with self.subTest(content=content):
                 (self.folder / 'check.py').write_bytes(content.encode('utf-8'))
                 self.assertEqual(validate(), [])

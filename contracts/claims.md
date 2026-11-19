@@ -48,7 +48,7 @@ Tests: [tests/catches_incomplete_contracts/](../tests/catches_incomplete_contrac
 - On a filesystem that ignores case, I spell a test path in the wrong case, and it fails. `test_path_spelling.py::test_wrong_case_is_rejected_on_a_filesystem_that_accepts_it`
 - On a filesystem that ignores case, I name the folder `Contracts`, and it fails. `test_path_spelling.py::test_discovery_directory_spelling_is_exact_when_filesystem_ignores_case`
 - I spell a path differently from the entry its folder lists, and it fails, naming that entry. `test_path_spelling.py::test_exact_membership_with_controlled_directory_listings`
-- I cite a Python test that has a `def` or `async def` line, at any indentation, and it passes. `test_test_names.py::test_python_test_needs_a_def_at_any_indentation`
+- I cite a Python test, and it passes as soon as my Python version recognizes its `def name(` or `async def name(` header at any indentation. `test_test_names.py::test_python_test_needs_a_def_at_any_indentation`
 - I cite a Python test whose file lacks its definition, even when a string contains the definition as an example, and it fails. `test_test_names.py::test_python_test_without_its_def_fails`
 - I cite a test in a file that is not Python, and it passes only if the name appears there as a whole word. `test_test_names.py::test_other_files_need_the_name_as_a_whole_word`
 - I cite tests in two files, and each name is looked up in its own file. `test_test_names.py::test_each_item_is_checked_against_its_own_file`
