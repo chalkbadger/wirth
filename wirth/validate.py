@@ -74,7 +74,7 @@ def _defines(label, content, name):
         return re.search(pattern, content) is not None
 
     # A definition line is enough, even when its function body is unfinished.
-    header = re.compile(rf"[ \t]*(?:async[ \t]+)?def[ \t]+{name}[ \t]*\(")
+    header = re.compile(rf"[ \t]*(?:async[ \t]+)?def[ \t]+{name}[ \t]*[(\[]")
     source = BytesIO(content.replace(b"\r\n", b"\n").replace(b"\r", b"\n"))
     try:
         return any(token.type == tokenize.NAME and token.string == "def" and header.match(token.line)
