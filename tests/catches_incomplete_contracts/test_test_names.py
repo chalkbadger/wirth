@@ -8,7 +8,8 @@ class TestNameTests(ValidatorTestCase):
                         'class Tests:\n    def test_observation(self):\n        pass\n',
                         'class Tests:\n\tdef test_observation(self):\n',
                         'import x\r\ndef test_observation():\r\n',
-                        'async def test_observation():\n']:
+                        'async def test_observation():\n',
+                        '"""An example."""\ndef test_observation():\n    pass\n']:
             with self.subTest(content=content):
                 self.evidence('check.py', content)
                 self.assertEqual(validate(), [])
@@ -17,7 +18,9 @@ class TestNameTests(ValidatorTestCase):
         for content in ['', 'test_observation()\n', '# def test_observation():\n',
                         'test_observation = make_test()\n', 'def test_observation_extra():\n',
                         'def my_test_observation():\n', 'x = "def test_observation()"\n',
-                        'def test_observation\n', 'class test_observation:\n']:
+                        'def test_observation\n', 'class test_observation:\n',
+                        'TEMPLATE = """\ndef test_observation():\n    pass\n"""\n',
+                        "'''Example method:\n    async def test_observation(self):\n        pass\n'''\n"]:
             with self.subTest(content=content):
                 self.evidence('check.py', content)
                 self.assertCountEqual(validate(), [
