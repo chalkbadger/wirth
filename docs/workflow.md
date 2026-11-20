@@ -6,11 +6,13 @@ Read the issue and relevant repository context under
 [Shared decisions](product.md#shared-decisions).
 
 Apply the specification's [scope and decision rules](product.md#refine-the-issue).
-Use the scope cut to propose the first useful delivery and identify deferrals.
+Propose the first useful delivery and name deferrals. Ask the owner before
+deferring an input if doing so would hide output users rely on.
 
-State observable success at the user's level. Each item an
-[adequate test](#adequate-tests) can show becomes a contract claim; each other item
-names the observation its PR will publish, under the
+State observable success at the user's level. When a change suppresses output,
+state in Success what the user still sees and under which input or invocation.
+Each item an [adequate test](#adequate-tests) can show becomes a contract claim;
+each other item names the observation its PR will publish, under the
 [contract rule](product.md#contracts). Test details belong in the contract. Update
 the issue using the specification's [issue requirements](product.md#shared-decisions).
 
@@ -143,10 +145,12 @@ inadequate**, name the missed failure and explain the repair.
 
 ### 2. Evidence
 
-For each obligation, look for a concrete wrong implementation that would still
-pass its tests. If one exists, the evidence is inadequate: name the missed failure
-and the observation needed. Apply the adequate-test rules and check test mapping
-and discovery. Flag duplicated, tautological or unnecessary tests.
+For each obligation, look for a concrete wrong implementation that would pass its
+tests. Flag inadequate evidence by naming the missed failure and the observation
+needed to catch it. For a weakened or removed test, name the failure it caught
+and the remaining test that catches it, or identify the protection lost.
+Apply the [adequate-test rules](#adequate-tests), check test mapping and discovery,
+and flag duplicated, tautological or unnecessary tests.
 
 Inspect the [before-and-after record](#before-implementation); a passing result
 alone does not supply it.
@@ -158,8 +162,9 @@ If run, publish the bugs, revision, reproduction steps, timeouts
 and outcomes with the findings; explain acceptable survivors. Distinguish a
 hypothetical missed failure from an executed check.
 The reviewer chooses independent bugs before reading the author's bug list, then
-checks both sets. For each condition a claim depends on, plant one bug that makes it
-hold when it should not and one that makes it fail when it should hold.
+checks both sets. Consider each condition a claim depends on and each condition
+the diff changes that could affect the user's result. For each, plant one bug
+that makes it hold when it should not and one that makes it fail when it should hold.
 
 ### 3. Fail loudly
 
