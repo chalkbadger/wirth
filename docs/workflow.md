@@ -121,8 +121,14 @@ an unverified statement cannot block a PR or be the reason for a change.
 
 ### 1. Claim level
 
-Compare claims with the proposed change and user-facing documentation using the
-[claim rule](product.md#contracts). Flag claims in that documentation without
+Run the same inputs on base and head. Try the changed condition both present and
+absent, with and without each deferred input, existing special case, and supported
+way of invoking the feature that can reach it. Vary one of those at a time. Compare the
+project's user-visible outputs. Map each distinct difference to an agreed Success
+item or report it as a finding. Group matching results when reporting them.
+
+Use the [claim rule](product.md#contracts) to compare claims with the proposed
+change and user-facing documentation. Flag promises in that documentation without
 supporting evidence.
 Judge claim and result text as rendered on GitHub, including hidden content and
 unchecked links.
@@ -136,10 +142,10 @@ text, evidence descriptions and reference-table entries. Name both the copy and
 authoritative source, and request replacing the duplicated detail with a source
 link before recommending acceptance. Keep examples.
 
-Compare with the merged contract. Record each existing claim as kept, revised or
-removed, with the reason.
-If a kept claim's earlier evidence was inadequate, record **kept; earlier evidence
-inadequate**, name the missed failure and explain the repair.
+Compare with the merged contract. Record revised or removed claims and explain
+why they changed. For a claim that lost protection, name what its checks no
+longer catch. Record a kept claim whose earlier evidence missed a failure as
+**kept; earlier evidence inadequate**, name the failure and explain the repair.
 
 ### 2. Evidence
 
