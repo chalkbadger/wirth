@@ -198,9 +198,20 @@ results against the procedure below.
 Name a human as the author or reviewer of text only when they wrote or reviewed
 that exact text.
 Never edit old comments; append corrections as new comments.
-Once the PR exists, publish earlier local review findings with their locations,
-mismatches, resolutions and reasons; identify any review that was local and
-unrecorded.
+Once the PR exists, record or link every known finding there, including findings
+received elsewhere or after it opened. Name the input and observed mismatch, and
+identify any review that was local and unrecorded. Before summarizing the review,
+record each finding's result in the finding or its replies:
+
+- **Verified** — rerun the reproduction on the current head and record the
+  revision and observed result that verifies the fix. For a wording or contract
+  finding, link the corrected passage at that revision and check it against the
+  finding.
+- **Declined** — record the decision and reason. If a real defect is handled
+  elsewhere, link the owning issue or fix and state its status in the reason.
+- **Open** — identify what remains, including a reproduction that could not be run.
+
+A later head needs a current check before the summary calls a fix verified.
 
 ## Record execution results
 
