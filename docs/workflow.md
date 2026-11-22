@@ -106,10 +106,21 @@ document or the current proposal's records cannot be read, report the affected
 review as not performed and stop short of judging scope.
 
 Brief each reviewer on one pass only. If one reviewer runs all passes, run them one
-at a time, re-reading only that pass's section. Start with claim level. Each finding
-names its location, affected claim or principle, mismatch and resolution type:
-**implementation, evidence or contract**. Implementation includes documentation
-changes. Report inapplicable checks with their reason.
+at a time, re-reading only that pass's section. Start with claim level.
+Report inapplicable checks with their reason.
+
+Title each finding with its location and affected claim or principle. Give it
+six fields so a teammate can check it without consulting another finding:
+
+- **Command and setup** — Give the revision, inputs and commands to reproduce it.
+- **Expected** — State the result and cite the source that establishes it.
+- **Actual** — Give the result you saw and how it differs. Mark an unrun check
+  *not run*.
+- **Control** — Change an input that should flip the result. Give the input and
+  outcome, or mark the control *not run*.
+- **Fix location** — Name the implementation (including documentation), evidence
+  or contract to change and why. Identify the specification if the error is there.
+- **Evidence type** — Distinguish what you observed from what the source documents.
 
 Resolve findings through the specification's [build-and-review process](product.md#build-and-review).
 Apply the [decision rule](product.md#refine-the-issue) to conflicts and the
@@ -123,7 +134,14 @@ an unverified statement cannot block a PR or be the reason for a change.
 
 ### 1. Claim level
 
-Run the same inputs on base and head. Try the changed condition both present and
+List every in-scope claim, one per line. Check it against the source of the
+expected behavior under [Adequate tests](#adequate-tests). On that line cite the
+source, state what it establishes or leaves unresolved, and say whether you
+tested the claim or checked the source only. If a check could not run, say why.
+
+Choose promising leads for detailed testing across the passes. When asked to
+test every claim, select them all. For each selected lead, run the
+same inputs on base and head. Try the changed condition both present and
 absent, with and without each deferred input, existing special case, and supported
 way of invoking the feature that can reach it. Vary one of those at a time. Compare the
 project's user-visible outputs. Map each distinct difference to an agreed Success
@@ -151,10 +169,11 @@ longer catch. Record a kept claim whose earlier evidence missed a failure as
 
 ### 2. Evidence
 
-For each obligation, look for a concrete wrong implementation that would pass its
-tests. Flag inadequate evidence by naming the missed failure and the observation
-needed to catch it. For a weakened or removed test, name the failure it caught
-and the remaining test that catches it, or identify the protection lost.
+For each evidence obligation of a selected lead, look for a concrete wrong
+implementation that would pass its tests. Flag inadequate evidence by naming
+the missed failure and the observation needed to catch it. For a weakened or
+removed test, name the failure it caught and the remaining test that catches it,
+or identify the protection lost.
 Apply the [adequate-test rules](#adequate-tests), check test mapping and discovery,
 and flag duplicated, tautological or unnecessary tests.
 
@@ -168,8 +187,8 @@ If run, publish the bugs, revision, reproduction steps, timeouts
 and outcomes with the findings; explain acceptable survivors. Distinguish a
 hypothetical missed failure from an executed check.
 The reviewer chooses independent bugs before reading the author's bug list, then
-checks both sets. Consider each condition a claim depends on and each condition
-the diff changes that could affect the user's result. For each, plant one bug
+checks both sets. Consider each condition the selected claim depends on and each
+condition the diff changes that could affect its result. For each, plant one bug
 that makes it hold when it should not and one that makes it fail when it should hold.
 
 ### 3. Fail loudly
