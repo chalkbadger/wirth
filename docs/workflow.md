@@ -139,8 +139,8 @@ expected behavior under [Adequate tests](#adequate-tests). On that line cite the
 source, state what it establishes or leaves unresolved, and say whether you
 tested the claim or checked the source only. If a check could not run, say why.
 
-Choose promising leads for detailed testing across the passes. If the owner
-asks to test every claim, select them all. For each selected lead, run the
+Choose promising leads for detailed testing across the passes. When asked to
+test every claim, select them all. For each selected lead, run the
 same inputs on base and head. Try the changed condition both present and
 absent, with and without each deferred input, existing special case, and supported
 way of invoking the feature that can reach it. Vary one of those at a time. Compare the
