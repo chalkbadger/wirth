@@ -1,5 +1,11 @@
 # Wirth
 
+- [I run `wirth validate`, and it fails when a contract is incomplete or its evidence does not point at a test that exists.](#catches_incomplete_contracts-i-run-wirth-validate-and-it-fails-when-a-contract-is-incomplete-or-its-evidence-does-not-point-at-a-test-that-exists)
+- [When validation fails, I see every problem with its file and line, and the command exits unsuccessfully.](#failures_say_what_to_fix-when-validation-fails-i-see-every-problem-with-its-file-and-line-and-the-command-exits-unsuccessfully)
+- [When validation passes, I know my contracts are well formed and nothing more: no tests ran.](#a_pass_means_well_formed_only-when-validation-passes-i-know-my-contracts-are-well-formed-and-nothing-more-no-tests-ran)
+- [I put something validation does not recognize in a contract or in `contracts/`, and it fails instead of ignoring it.](#rejects_anything_unexpected-i-put-something-validation-does-not-recognize-in-a-contract-or-in-contracts-and-it-fails-instead-of-ignoring-it)
+- [I list a contract's claims under its title, and `wirth validate` fails until each line links its claim in the claim's own words and order.](#contents_list_matches_claims-i-list-a-contracts-claims-under-its-title-and-wirth-validate-fails-until-each-line-links-its-claim-in-the-claims-own-words-and-order)
+
 ## [catches_incomplete_contracts] I run `wirth validate`, and it fails when a contract is incomplete or its evidence does not point at a test that exists.
 Issue: https://github.com/chalkbadger/wirth/issues/1
 Tests: [tests/catches_incomplete_contracts/](../tests/catches_incomplete_contracts/)
@@ -112,3 +118,14 @@ Tests: [tests/rejects_anything_unexpected/](../tests/rejects_anything_unexpected
 - I make a contract a folder, and it fails. `test_contract_inputs.py::test_contract_files_must_not_be_directories`
 - I put something other than a `.md` file in `contracts/`, and it fails. `test_contract_inputs.py::test_unexpected_entries_are_reported`
 - I make `contracts/` a file, and it fails. `test_contract_inputs.py::test_discovery_directory_that_is_a_file_fails`
+
+## [contents_list_matches_claims] I list a contract's claims under its title, and `wirth validate` fails until each line links its claim in the claim's own words and order.
+Issue: https://github.com/chalkbadger/wirth/issues/38
+Tests: [tests/contents_list_matches_claims/](../tests/contents_list_matches_claims/)
+
+- I leave out the list, and it passes. `test_contents.py::test_contract_without_a_list_passes`
+- I write a list directly under the title that matches the claims in text, link and order, and it passes. `test_contents.py::test_matching_list_passes`
+- I add, remove, reword or reorder a claim, or change a link, without updating the list, and it fails at the list, showing the lines it expects. `test_contents.py::test_list_out_of_step_with_the_claims_fails_at_the_list`
+- I start a list with one line, right or wrong, and `wirth validate` shows every line the list needs; I paste them in place of mine, and it passes. `test_contents.py::test_one_line_shows_every_line_the_list_needs`
+- I write claims whose headings repeat or carry punctuation and code spans, and the links it expects are the ones GitHub renders. `test_anchors.py::test_links_match_the_anchors_github_renders`
+- I put list lines anywhere but directly under the title, and it fails as it did before lists. `test_contents.py::test_list_away_from_the_title_fails_as_today`

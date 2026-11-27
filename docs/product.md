@@ -91,7 +91,9 @@ required behavior. Guarantees that together define one behavior belong in one
 claim. Split claims only where they could be accepted or rejected independently.
 
 A project keeps its claims in one file, `contracts/claims.md`, read top to bottom;
-split it into one file per capability only when it gets long. Each claim's ID is a
+split it into one file per capability only when it gets long. A
+[contents list](usage.md#local-contract-validation) under the title is recommended, so
+a reader sees the claims at a glance. Each claim's ID is a
 short gist of the claim in underscores, such as `failures_say_what_to_fix`, unique
 across all contract files, and is also the name of the claim's test folder. Each test lives in the folder of the claim
 it proves; a test that would serve two claims moves or splits.

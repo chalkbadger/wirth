@@ -17,6 +17,9 @@ ITEM = re.compile(r"- (.*) `([^`]*)`")
 ISSUE_SHAPE = "Issue: https://github.com/<owner>/<repo>/issues/<positive integer>"
 TESTS_SHAPE = "Tests: [tests/<claim_id>/](../tests/<claim_id>/)"
 ITEM_SHAPE = "- <result> `file::test_name`"
+CONTENTS_LINE = re.compile(r"- \[.*\]\(#.*\)")
+HEADING = re.compile(r"#{1,6}(?:[ \t]+(.*))?")
+CLAIM_HEADING = re.compile(r"## \[([^\]]*)\](?: (.*))?")
 
 
 def _validate_name(name, kind):
@@ -93,6 +96,38 @@ def _text_error(text):
     return None
 
 
+def _contents_lines(lines):
+    # The list each claim heading needs, linked by the anchor GitHub renders, which
+    # counts every heading in the file when it numbers repeats.
+    anchors, expected = set(), []
+    for line in lines:
+        heading = HEADING.fullmatch(line)
+        if heading is None:
+            continue
+        text = (heading.group(1) or "").strip(" \t")
+        base = re.sub(r"[^a-z0-9 _-]", "", text.replace("`", "").lower()).replace(" ", "-")
+        anchor, repeat = base, 0
+        while anchor in anchors:
+            repeat += 1
+            anchor = f"{base}-{repeat}"
+        anchors.add(anchor)
+        if claim := CLAIM_HEADING.fullmatch(line):
+            sentence = (claim.group(2) or "").strip(" \t")
+            expected.append(f"- [{sentence}](#{anchor})")
+    return expected
+
+
+def _contents_errors(contents, expected):
+    # Point at the first line that differs, or at the last line when the list is short.
+    for index, (number, line) in enumerate(contents):
+        if index >= len(expected) or line != expected[index]:
+            break
+    else:
+        if len(contents) == len(expected):
+            return []
+    return [f"{number}: contents list does not match the claims; the list should be:\n" + "\n".join(expected)]
+
+
 def _contract_errors(root, text, label, seen):
     # seen maps each claim ID to where it was first used, across all contract files.
     errors = []
@@ -107,6 +142,14 @@ def _contract_errors(root, text, label, seen):
         errors.append(f"{title_at}: title {problem}")
     # A missing title must not swallow an Issue line or claim in its place.
     body = nonblank_lines[0 if title.startswith(("Issue:", "## ")) else 1:]
+    # An optional contents list sits directly under the title.
+    contents = []
+    if title.startswith("# "):
+        while len(contents) < len(body) and CONTENTS_LINE.fullmatch(body[len(contents)][1]):
+            contents.append(body[len(contents)])
+        body = body[len(contents):]
+    if contents:
+        errors.extend(_contents_errors(contents, _contents_lines(source_lines)))
     ids = set()
     claim_at = None
     needs_evidence = False
@@ -147,7 +190,7 @@ def _contract_errors(root, text, label, seen):
                 errors.append(f"{claim_at}: claim must be followed by {TESTS_SHAPE}")
         if line.startswith("## "):
             finish_claim()
-            heading = re.fullmatch(r"## \[([^\]]*)\](?: (.*))?", line)
+            heading = CLAIM_HEADING.fullmatch(line)
             claim_at, needs_evidence = number, heading is not None
             due, due_required, claim_id, folder = ["Issue", "Tests"], heading is not None, None, None
             if heading is None:
