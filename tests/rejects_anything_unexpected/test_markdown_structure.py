@@ -21,7 +21,7 @@ class MarkdownStructureTests(ValidatorTestCase):
         self.assertEqual(validate(), [])
 
     def test_unrecognized_content_is_not_silently_ignored(self):
-        for extra, reason in [('Notes: something', UNEXPECTED), ('### Notes', UNEXPECTED),
+        for extra, reason in [('Notes: something', UNEXPECTED),
                               ('# A second title', UNEXPECTED),
                               ('Issue: https://github.com/a/b/issues/2', UNEXPECTED),
                               (TESTS.rstrip('\n'), UNEXPECTED),

@@ -36,6 +36,10 @@ RENDERED = [
 # A title that takes a later claim's anchor, as rendered at
 # https://github.com/chalkbadger/wirth/blob/9e2f2630998da0a010ecc5425385dab47003b408/probe/title.md
 TITLE_COLLISION = [('# Receipt saved', 'receipt-saved'), ('## [receipt] Saved', 'receipt-saved-1')]
+# A group that takes a later claim's anchor, as rendered at
+# https://github.com/chalkbadger/wirth/blob/9e2f2630998da0a010ecc5425385dab47003b408/probe/group.md
+GROUP_COLLISION = [('# Probe', 'probe'), ('## [first] A claim', 'first-a-claim'),
+                   ('### Receipt saved', 'receipt-saved'), ('## [receipt] Saved', 'receipt-saved-1')]
 
 
 def expected_list(rendered):
@@ -52,6 +56,7 @@ class AnchorTests(ValidatorTestCase):
         return contents[0].split('\n')[1:]
 
     def test_links_match_the_anchors_github_renders(self):
-        for rendered in [RENDERED, TITLE_COLLISION]:
-            with self.subTest(title=rendered[0][0]):
+        for name, rendered in [('probe', RENDERED), ('title collision', TITLE_COLLISION),
+                               ('group collision', GROUP_COLLISION)]:
+            with self.subTest(fixture=name):
                 self.assertEqual(self.contents_shown(rendered), expected_list(rendered))

@@ -20,6 +20,7 @@ ITEM_SHAPE = "- <result> `file::test_name`"
 CONTENTS_LINE = re.compile(r"- \[.*\]\(#.*\)")
 HEADING = re.compile(r"#{1,6}(?:[ \t]+(.*))?")
 CLAIM_HEADING = re.compile(r"## \[([^\]]*)\](?: (.*))?")
+GROUP_HEADING = re.compile(r"###(?:[ \t]+(.*))?")
 
 
 def _validate_name(name, kind):
@@ -164,6 +165,12 @@ def _contract_errors(root, text, label, seen):
     due, due_required = [], False
     claim_id = None
     folder = None
+    # Optional group headings of the current claim, allowed once its Tests line is read.
+    groups = {"allowed": False, "names": set(), "at": None, "items": 0, "loose": []}
+
+    def finish_group():
+        if groups["at"] is not None and not groups["items"]:
+            errors.append(f"{groups['at']}: group must have at least one evidence item")
 
     def finish_claim():
         for name in due if due_required else []:
@@ -171,6 +178,7 @@ def _contract_errors(root, text, label, seen):
             errors.append(f"{claim_at}: claim must be followed by {shape}")
         if needs_evidence:
             errors.append(f"{claim_at}: claim must have at least one evidence item")
+        finish_group()
 
     for number, line in body:
         if due and due[0] == "Issue":
@@ -184,6 +192,7 @@ def _contract_errors(root, text, label, seen):
         if due and due[0] == "Tests":
             due.pop(0)
             if line.startswith("Tests:"):
+                groups["allowed"] = True
                 tests = TESTS_LINE.fullmatch(line)
                 if tests is None:
                     errors.append(f"{number}: expected '{TESTS_SHAPE}'")
@@ -200,6 +209,7 @@ def _contract_errors(root, text, label, seen):
             heading = CLAIM_HEADING.fullmatch(line)
             claim_at, needs_evidence = number, heading is not None
             due, due_required, claim_id, folder = ["Issue", "Tests"], heading is not None, None, None
+            groups.update(allowed=False, names=set(), at=None, items=0, loose=[])
             if heading is None:
                 errors.append(f"{number}: expected '## [id] <nonblank claim>'")
                 continue
@@ -217,8 +227,26 @@ def _contract_errors(root, text, label, seen):
             ids.add(identifier)
             if problem := _text_error(claim):
                 errors.append(f"{number}: claim {problem}")
+        elif groups["allowed"] and (group := GROUP_HEADING.fullmatch(line)):
+            finish_group()
+            # Results above the first group are reported here, all before this line.
+            for loose in [] if groups["names"] else groups["loose"]:
+                errors.append(f"{loose}: put this result under a group heading, because its claim has groups")
+            name = (group[1] or "").strip(" \t")
+            if problem := _text_error(name):
+                errors.append(f"{number}: group name {problem}")
+            # Runs of spaces outside code spans render as one, so they name the same group.
+            key = "`".join(re.sub(r"[ \t]+", " ", part) if index % 2 == 0 else part
+                           for index, part in enumerate(name.split("`")))
+            if not problem and key in groups["names"]:
+                errors.append(f"{number}: duplicate group name {name!r} in this claim")
+            groups["names"].add(key)
+            groups.update(at=number, items=0)
         elif line.startswith("- "):
             needs_evidence = False
+            if groups["at"] is None:
+                groups["loose"].append(number)
+            groups["items"] += 1
             if claim_at is None:
                 errors.append(f"{number}: evidence must follow a claim heading")
             item = ITEM.fullmatch(line)
