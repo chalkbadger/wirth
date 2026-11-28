@@ -72,7 +72,7 @@ claim and its evidence remain distinct.
 For example, this obligation checks the stored-items part of the claim:
 
 ```markdown
-## [deleting_a_missing_item_changes_nothing] I delete an item that is already gone, and the request succeeds without changing my stored items.
+## [deleting_a_missing_item_changes_nothing] When I delete an item that is already gone, the request succeeds without changing my stored items.
 Issue: https://github.com/example/store/issues/7
 Tests: [tests/deleting_a_missing_item_changes_nothing/](../tests/deleting_a_missing_item_changes_nothing/)
 
