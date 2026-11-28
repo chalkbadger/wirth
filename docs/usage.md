@@ -50,6 +50,10 @@ Tests: [tests/one_receipt_per_order/](../tests/one_receipt_per_order/)
 - I retry a declined payment until it succeeds, and still only one receipt arrives. `test_delivery.py::test_retried_payment_sends_one_receipt`
 ```
 
+To sort a long claim's evidence by topic, put `### <group name>` headings after its
+Tests line, with every result under one of them. The
+[claim rule](product.md#contracts) says when to group and when to split a claim.
+
 To give a contract a contents list, write one line under its title, such as
 `- [x](#x)`, and run `wirth validate`. It fails and shows every line the list needs;
 paste them in place of yours. When the claims change, it shows the list again.

@@ -5,6 +5,7 @@
 - [When validation passes, I know my contracts are well formed and nothing more: no tests ran.](#a_pass_means_well_formed_only-when-validation-passes-i-know-my-contracts-are-well-formed-and-nothing-more-no-tests-ran)
 - [I put something validation does not recognize in a contract or in `contracts/`, and it fails instead of ignoring it.](#rejects_anything_unexpected-i-put-something-validation-does-not-recognize-in-a-contract-or-in-contracts-and-it-fails-instead-of-ignoring-it)
 - [I list a contract's claims under its title, and `wirth validate` fails until each line links its claim in the claim's own words and order.](#contents_list_matches_claims-i-list-a-contracts-claims-under-its-title-and-wirth-validate-fails-until-each-line-links-its-claim-in-the-claims-own-words-and-order)
+- [I sort a long claim's evidence under group headings, and `wirth validate` checks the groups of each claim that has them.](#evidence_groups_are_checked-i-sort-a-long-claims-evidence-under-group-headings-and-wirth-validate-checks-the-groups-of-each-claim-that-has-them)
 
 ## [catches_incomplete_contracts] I run `wirth validate`, and it fails when a contract is incomplete or its evidence does not point at a test that exists.
 Issue: https://github.com/chalkbadger/wirth/issues/1
@@ -129,3 +130,12 @@ Tests: [tests/contents_list_matches_claims/](../tests/contents_list_matches_clai
 - I start a list with one line, right or wrong, and `wirth validate` shows every line the list needs; I paste them in place of mine, and it passes. `test_contents.py::test_one_line_shows_every_line_the_list_needs`
 - I write claims whose headings repeat or carry punctuation and code spans, and the links it expects are the ones GitHub renders. `test_anchors.py::test_links_match_the_anchors_github_renders`
 - I put list lines anywhere but directly under the title, and it fails as it did before lists. `test_contents.py::test_list_away_from_the_title_fails_as_today`
+
+## [evidence_groups_are_checked] I sort a long claim's evidence under group headings, and `wirth validate` checks the groups of each claim that has them.
+Issue: https://github.com/chalkbadger/wirth/issues/39
+Tests: [tests/evidence_groups_are_checked/](../tests/evidence_groups_are_checked/)
+
+- I put group headings above the evidence of one claim and leave another claim ungrouped, and it passes. `test_groups.py::test_grouped_and_ungrouped_claims_pass`
+- In a claim with groups, I put a result above the first group, leave a group without evidence, repeat a group name or write a name that breaks the plain-text rule, and it fails at that line. `test_groups.py::test_broken_groups_fail_at_their_line`
+- I put a group heading before the first claim, and it fails as it did before groups. `test_groups.py::test_group_heading_before_the_first_claim_fails_as_today`
+- I break a group and a later claim, and I see both errors. `test_groups.py::test_group_error_keeps_later_claim_errors`

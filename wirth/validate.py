@@ -162,6 +162,12 @@ def _contract_errors(root, text, label, seen):
     due, due_required = [], False
     claim_id = None
     folder = None
+    # Optional group headings of the current claim, allowed once its Tests line is read.
+    groups = {"allowed": False, "names": set(), "at": None, "items": 0, "loose": []}
+
+    def finish_group():
+        if groups["at"] is not None and not groups["items"]:
+            errors.append(f"{groups['at']}: group must have at least one evidence item")
 
     def finish_claim():
         for name in due if due_required else []:
@@ -169,6 +175,9 @@ def _contract_errors(root, text, label, seen):
             errors.append(f"{claim_at}: claim must be followed by {shape}")
         if needs_evidence:
             errors.append(f"{claim_at}: claim must have at least one evidence item")
+        finish_group()
+        for loose in groups["loose"] if groups["names"] else []:
+            errors.append(f"{loose}: put this result under a group heading, because its claim has groups")
 
     for number, line in body:
         if due and due[0] == "Issue":
@@ -182,6 +191,7 @@ def _contract_errors(root, text, label, seen):
         if due and due[0] == "Tests":
             due.pop(0)
             if line.startswith("Tests:"):
+                groups["allowed"] = True
                 tests = TESTS_LINE.fullmatch(line)
                 if tests is None:
                     errors.append(f"{number}: expected '{TESTS_SHAPE}'")
@@ -198,6 +208,7 @@ def _contract_errors(root, text, label, seen):
             heading = CLAIM_HEADING.fullmatch(line)
             claim_at, needs_evidence = number, heading is not None
             due, due_required, claim_id, folder = ["Issue", "Tests"], heading is not None, None, None
+            groups.update(allowed=False, names=set(), at=None, items=0, loose=[])
             if heading is None:
                 errors.append(f"{number}: expected '## [id] <nonblank claim>'")
                 continue
@@ -215,8 +226,20 @@ def _contract_errors(root, text, label, seen):
             ids.add(identifier)
             if problem := _text_error(claim):
                 errors.append(f"{number}: claim {problem}")
+        elif groups["allowed"] and (line == "###" or line.startswith("### ")):
+            finish_group()
+            name = line[4:]
+            if problem := _text_error(name):
+                errors.append(f"{number}: group name {problem}")
+            elif name in groups["names"]:
+                errors.append(f"{number}: duplicate group name {name!r} in this claim")
+            groups["names"].add(name)
+            groups.update(at=number, items=0)
         elif line.startswith("- "):
             needs_evidence = False
+            if groups["at"] is None:
+                groups["loose"].append(number)
+            groups["items"] += 1
             if claim_at is None:
                 errors.append(f"{number}: evidence must follow a claim heading")
             item = ITEM.fullmatch(line)
