@@ -8,16 +8,29 @@ class TestNameTests(ValidatorTestCase):
                         'class Tests:\n    def test_observation(self):\n        pass\n',
                         'class Tests:\n\tdef test_observation(self):\n',
                         'import x\r\ndef test_observation():\r\n',
-                        'async def test_observation():\n']:
+                        'import x\rdef test_observation():\r',
+                        '\ufeffdef test_observation():\n',
+                        'async def test_observation():\n',
+                        # Generic header reported by @oppo2357: https://github.com/chalkbadger/wirth/issues/29#issuecomment-6999146504
+                        'def test_observation[T](items: list[T]):\n    pass\n',
+                        'def test_observation[T: int](item: T):\n    pass\n',
+                        'class Tests:\n    def test_observation[T](self, item: T):\n        pass\n',
+                        'async def test_observation[T](item: T):\n    pass\n',
+                        '"""An example."""\ndef test_observation():\n    pass\n',
+                        'def test_observation():\n    pass\nexample = """unfinished\n']:
             with self.subTest(content=content):
-                self.evidence('check.py', content)
+                (self.folder / 'check.py').write_bytes(content.encode('utf-8'))
                 self.assertEqual(validate(), [])
 
     def test_python_test_without_its_def_fails(self):
         for content in ['', 'test_observation()\n', '# def test_observation():\n',
-                        'test_observation = make_test()\n', 'def test_observation_extra():\n',
+                        'test_observation[0] = 1\n', 'test_observation = make_test()\n', 'def test_observation_extra():\n',
                         'def my_test_observation():\n', 'x = "def test_observation()"\n',
-                        'def test_observation\n', 'class test_observation:\n']:
+                        'def test_observation\n', 'class test_observation:\n',
+                        'TEMPLATE = """\ndef test_observation():\n    pass\n"""\n',
+                        "'''Example method:\n    async def test_observation(self):\n        pass\n'''\n",
+                        'example = "Continued string:\\\ndef test_observation():\\\n"\n',
+                        'example = f"""Example {2 + 2}:\ndef test_observation():\n    pass\n"""\n']:
             with self.subTest(content=content):
                 self.evidence('check.py', content)
                 self.assertCountEqual(validate(), [

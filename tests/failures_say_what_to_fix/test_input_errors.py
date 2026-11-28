@@ -157,3 +157,19 @@ class InputErrorTests(ValidatorTestCase):
         self.assert_cli_errors(result, [
             'contracts/one.md:6: evidence reference: cannot read: denied by fixture',
             'contracts/two.md:3: claim must be nonblank'])
+
+    def test_python_source_that_cannot_be_checked_names_the_test_and_file(self):
+        self.write(self.other_contract(''), name='two.md')
+        later_error = 'contracts/two.md:3: claim must be nonblank'
+        evidence = self.folder / 'check.py'
+        for content in [b'"""unfinished\ndef test_observation():\n    pass\n',
+                        b'if True:\n    x = 1\n  y = 2\ndef test_observation():\n',
+                        b'\xff\ndef test_observation():\n',
+                        b'# coding: unknown-encoding\ndef test_observation():\n',
+                        b'# coding: base64\ndef test_observation():\n']:
+            with self.subTest(content=content):
+                evidence.write_bytes(content)
+                self.assertCountEqual(validate(), [
+                    "contracts/one.md:6: could not check whether test 'test_observation' is defined in "
+                    "tests/complete_contracts/check.py: Python could not tokenize the source",
+                    later_error])

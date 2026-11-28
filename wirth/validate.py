@@ -1,7 +1,9 @@
+from io import BytesIO
 import os
 from pathlib import Path
 import re
 import stat
+import tokenize
 
 
 # The rules enforced here are specified in contracts/claims.md.
@@ -71,11 +73,18 @@ def _tests_folder(root, label, link, claim_id):
 
 
 def _defines(label, content, name):
-    if label.endswith(".py"):
-        pattern = rb"(?:^|(?<=[\r\n]))[ \t]*(?:async[ \t]+)?def[ \t]+" + name.encode() + rb"[ \t]*\("
-    else:
+    if not label.endswith(".py"):
         pattern = rb"(?<![A-Za-z0-9_])" + name.encode() + rb"(?![A-Za-z0-9_])"
-    return re.search(pattern, content) is not None
+        return re.search(pattern, content) is not None
+
+    # A definition line is enough, even when its function body is unfinished.
+    header = re.compile(rf"[ \t]*(?:async[ \t]+)?def[ \t]+{name}[ \t]*[(\[]")
+    source = BytesIO(content.replace(b"\r\n", b"\n").replace(b"\r", b"\n"))
+    try:
+        return any(token.type == tokenize.NAME and token.string == "def" and header.match(token.line)
+                   for token in tokenize.tokenize(source.readline))
+    except (tokenize.TokenError, SyntaxError, UnicodeError, LookupError):
+        return False
 
 
 def _text_error(text):
