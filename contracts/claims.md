@@ -1,12 +1,12 @@
 # Wirth
 
-- [I run `wirth validate`, and it fails when a contract is incomplete or its evidence does not point at a test that exists.](#catches_incomplete_contracts-i-run-wirth-validate-and-it-fails-when-a-contract-is-incomplete-or-its-evidence-does-not-point-at-a-test-that-exists)
+- [When a contract is incomplete or its evidence does not point at a test that exists, `wirth validate` fails.](#catches_incomplete_contracts-when-a-contract-is-incomplete-or-its-evidence-does-not-point-at-a-test-that-exists-wirth-validate-fails)
 - [When validation fails, I see every problem with its file and line, and the command exits unsuccessfully.](#failures_say_what_to_fix-when-validation-fails-i-see-every-problem-with-its-file-and-line-and-the-command-exits-unsuccessfully)
 - [When validation passes, I know my contracts are well formed and nothing more: no tests ran.](#a_pass_means_well_formed_only-when-validation-passes-i-know-my-contracts-are-well-formed-and-nothing-more-no-tests-ran)
-- [I put something validation does not recognize in a contract or in `contracts/`, and it fails instead of ignoring it.](#rejects_anything_unexpected-i-put-something-validation-does-not-recognize-in-a-contract-or-in-contracts-and-it-fails-instead-of-ignoring-it)
-- [I list a contract's claims under its title, and `wirth validate` fails until each line links its claim in the claim's own words and order.](#contents_list_matches_claims-i-list-a-contracts-claims-under-its-title-and-wirth-validate-fails-until-each-line-links-its-claim-in-the-claims-own-words-and-order)
+- [When I put something validation does not recognize in a contract or in `contracts/`, it fails instead of ignoring it.](#rejects_anything_unexpected-when-i-put-something-validation-does-not-recognize-in-a-contract-or-in-contracts-it-fails-instead-of-ignoring-it)
+- [When I list a contract's claims under its title, `wirth validate` fails until each line links its claim in the claim's own words and order.](#contents_list_matches_claims-when-i-list-a-contracts-claims-under-its-title-wirth-validate-fails-until-each-line-links-its-claim-in-the-claims-own-words-and-order)
 
-## [catches_incomplete_contracts] I run `wirth validate`, and it fails when a contract is incomplete or its evidence does not point at a test that exists.
+## [catches_incomplete_contracts] When a contract is incomplete or its evidence does not point at a test that exists, `wirth validate` fails.
 Issue: https://github.com/chalkbadger/wirth/issues/1
 Tests: [tests/catches_incomplete_contracts/](../tests/catches_incomplete_contracts/)
 
@@ -105,7 +105,7 @@ Tests: [tests/a_pass_means_well_formed_only/](../tests/a_pass_means_well_formed_
 - I cite a test file that would fail if run, in a folder with no runner configuration and no Git repository, and run `wirth validate`; it exits zero, says checks were not run and evidence adequacy was not assessed, and the test file never runs. `test_validation_result.py::test_valid_cli_is_structure_only_and_does_not_execute`
 - I cite a file that is not a test, or not text, and it passes when the named test appears in it as a whole word. `test_validation_result.py::test_referenced_file_need_not_be_a_check_or_readable_text`
 
-## [rejects_anything_unexpected] I put something validation does not recognize in a contract or in `contracts/`, and it fails instead of ignoring it.
+## [rejects_anything_unexpected] When I put something validation does not recognize in a contract or in `contracts/`, it fails instead of ignoring it.
 Issue: https://github.com/chalkbadger/wirth/issues/1
 Tests: [tests/rejects_anything_unexpected/](../tests/rejects_anything_unexpected/)
 
@@ -119,7 +119,7 @@ Tests: [tests/rejects_anything_unexpected/](../tests/rejects_anything_unexpected
 - I put something other than a `.md` file in `contracts/`, and it fails. `test_contract_inputs.py::test_unexpected_entries_are_reported`
 - I make `contracts/` a file, and it fails. `test_contract_inputs.py::test_discovery_directory_that_is_a_file_fails`
 
-## [contents_list_matches_claims] I list a contract's claims under its title, and `wirth validate` fails until each line links its claim in the claim's own words and order.
+## [contents_list_matches_claims] When I list a contract's claims under its title, `wirth validate` fails until each line links its claim in the claim's own words and order.
 Issue: https://github.com/chalkbadger/wirth/issues/38
 Tests: [tests/contents_list_matches_claims/](../tests/contents_list_matches_claims/)
 
