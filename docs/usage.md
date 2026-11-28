@@ -42,13 +42,18 @@ Put Markdown contracts directly in `contracts/`, for example
 ```markdown
 # Delivery service
 
-## [one_receipt_per_order] I place an order and receive exactly one receipt.
+## [one_receipt_per_order] When I place an order, I receive exactly one receipt.
 Issue: https://github.com/example/service/issues/1
 Tests: [tests/one_receipt_per_order/](../tests/one_receipt_per_order/)
 
 - I complete an order, and one receipt arrives. `test_delivery.py::test_completed_order_sends_one_receipt`
 - I retry a declined payment until it succeeds, and still only one receipt arrives. `test_delivery.py::test_retried_payment_sends_one_receipt`
 ```
+
+To give a contract a contents list, write one line under its title, such as
+`- [x](#x)`, and run `wirth validate`. It fails and shows every line the list needs;
+paste them in place of yours. When the claims change, it fails again and shows the new
+list. [Wirth's contract](../contracts/claims.md#contents_list_matches_claims-when-i-list-a-contracts-claims-under-its-title-wirth-validate-fails-until-each-line-links-its-claim-in-the-claims-own-words-and-order) states what the list must match.
 
 The [claim rule](product.md#contracts) says how to write claims and evidence and
 how to lay out contracts and test folders. [What validation checks and what a pass
