@@ -52,9 +52,8 @@ Tests: [tests/one_receipt_per_order/](../tests/one_receipt_per_order/)
 
 To give a contract a contents list, write one line under its title, such as
 `- [x](#x)`, and run `wirth validate`. It fails and shows every line the list needs;
-paste them in place of yours. When the claims change, it shows the list again.
-[What the list must match](../contracts/claims.md#contents_list_matches_claims-when-i-list-a-contracts-claims-under-its-title-wirth-validate-fails-until-each-line-links-its-claim-in-the-claims-own-words-and-order)
-is stated as a claim.
+paste them in place of yours. When the claims change, it fails again and shows the new
+list. [Wirth's contract](../contracts/claims.md#contents_list_matches_claims-when-i-list-a-contracts-claims-under-its-title-wirth-validate-fails-until-each-line-links-its-claim-in-the-claims-own-words-and-order) states what the list must match.
 
 The [claim rule](product.md#contracts) says how to write claims and evidence and
 how to lay out contracts and test folders. [What validation checks and what a pass

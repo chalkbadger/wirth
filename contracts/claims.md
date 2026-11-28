@@ -125,7 +125,7 @@ Tests: [tests/contents_list_matches_claims/](../tests/contents_list_matches_clai
 
 - I leave out the list, and it passes. `test_contents.py::test_contract_without_a_list_passes`
 - I write a list directly under the title that matches the claims in text, link and order, and it passes. `test_contents.py::test_matching_list_passes`
-- I add, remove, reword or reorder a claim, or change a link, without updating the list, and it fails at the list, showing the lines it expects, or that no claims remain. `test_contents.py::test_list_out_of_step_with_the_claims_fails_at_the_list`
+- I add, remove, reword or reorder a claim, or change a link, without updating the list, and it fails at the list, showing the lines it expects, or that no claims are left to list. `test_contents.py::test_list_out_of_step_with_the_claims_fails_at_the_list`
 - I start a list with one line, right or wrong, and `wirth validate` shows every line the list needs; I paste them in place of mine, and it passes. `test_contents.py::test_one_line_shows_every_line_the_list_needs`
 - I write claims whose headings repeat or carry punctuation and code spans, and the links it expects are the ones GitHub renders. `test_anchors.py::test_links_match_the_anchors_github_renders`
 - I put list lines anywhere but directly under the title, and it fails as it did before lists. `test_contents.py::test_list_away_from_the_title_fails_as_today`
