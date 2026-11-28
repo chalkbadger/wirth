@@ -94,8 +94,8 @@ behavior by topic; a group that could be accepted or rejected on its own should 
 claim. A claim with more than 20 evidence items is easier to read with groups.
 
 A project keeps its claims in one file, `contracts/claims.md`, read top to bottom;
-split it into one file per capability only when it gets long. A
-[contents list](usage.md#local-contract-validation) under the title is recommended, so
+split it into one file per capability only when it gets long. Open each
+contract with a [contents list](usage.md#local-contract-validation) under its title, so
 a reader sees the claims at a glance. Each claim's ID is a
 short gist of the claim in underscores, such as `failures_say_what_to_fix`, unique
 across all contract files, and is also the name of the claim's test folder. Each test lives in the folder of the claim
