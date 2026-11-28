@@ -105,7 +105,10 @@ def _contents_lines(lines):
         if heading is None:
             continue
         text = (heading.group(1) or "").strip(" \t")
-        base = re.sub(r"[^a-z0-9 _-]", "", text.replace("`", "").lower()).replace(" ", "-")
+        # CommonMark trims one space from each end of a code span padded on both sides.
+        rendered = re.sub(r"`([^`]*)`", lambda span: span[1][1:-1] if re.fullmatch(r" .*[^ ].* ", span[1])
+                          else span[1], text)
+        base = re.sub(r"[^a-z0-9 _-]", "", rendered.replace("`", "").lower()).replace(" ", "-")
         anchor, repeat = base, 0
         while anchor in anchors:
             repeat += 1
@@ -125,6 +128,8 @@ def _contents_errors(contents, expected):
     else:
         if len(contents) == len(expected):
             return []
+    if not expected:
+        return [f"{number}: contents list has no claims to list; remove it or add claims"]
     return [f"{number}: contents list does not match the claims; the list should be:\n" + "\n".join(expected)]
 
 

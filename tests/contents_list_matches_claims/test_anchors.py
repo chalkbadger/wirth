@@ -6,6 +6,8 @@ from validator_support import ValidatorTestCase
 
 # Each heading with the anchor GitHub gave it, in file order, as rendered at
 # https://github.com/chalkbadger/wirth/blob/6cf9159d751c0d4ec4a2d3ef32598073ab51fc58/probe/anchors.md
+# and, for padded code spans, at
+# https://github.com/chalkbadger/wirth/blob/984fe036d80987fbdef6dcc0be4aabcf580ef6c8/probe/anchors.md
 RENDERED = [
     ('# Probe', 'probe'),
     ('## [dup] Same text', 'dup-same-text'),
@@ -22,6 +24,9 @@ RENDERED = [
      'code-i-run-wirth-validate-and-ab_c-and-xyz-and-qr'),
     ('## [space] two  spaces\ttab', 'space-two--spacestab'),
     ('## [Digits9] 123 Num', 'digits9-123-num'),
+    ('## [pad] I run ` x ` now', 'pad-i-run-x-now'),
+    ('## [pad2] I run `  y  ` and ` z` and `   `', 'pad2-i-run--y--and--z-and----'),
+    ('## [mixed] Ab `C D` e', 'mixed-ab-c-d-e'),
     ('### Group heading', 'group-heading'),
     ('### Group heading', 'group-heading-1'),
     ('## Probe', 'probe-1'),

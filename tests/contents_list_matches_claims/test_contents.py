@@ -46,6 +46,10 @@ class ContentsListTests(ValidatorTestCase):
                 self.write(text)
                 self.assertEqual(validate(), [
                     f'contracts/one.md:{line}: {MISMATCH}\n' + '\n'.join(expected)])
+        self.write('# Local contract\n\n' + FIRST + '\n')
+        self.assertCountEqual(validate(), [
+            'contracts/one.md:3: contents list has no claims to list; remove it or add claims',
+            'contracts/one.md:4: contract must have at least one claim'])
 
     def test_one_line_shows_every_line_the_list_needs(self):
         for first in [FIRST, '- [Something else](#elsewhere)']:
