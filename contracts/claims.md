@@ -5,7 +5,7 @@
 - [When validation passes, I know my contracts are well formed and nothing more: no tests ran.](#a_pass_means_well_formed_only-when-validation-passes-i-know-my-contracts-are-well-formed-and-nothing-more-no-tests-ran)
 - [When I put something validation does not recognize in a contract or in `contracts/`, it fails instead of ignoring it.](#rejects_anything_unexpected-when-i-put-something-validation-does-not-recognize-in-a-contract-or-in-contracts-it-fails-instead-of-ignoring-it)
 - [When I list a contract's claims under its title, `wirth validate` fails until each line links its claim in the claim's own words and order.](#contents_list_matches_claims-when-i-list-a-contracts-claims-under-its-title-wirth-validate-fails-until-each-line-links-its-claim-in-the-claims-own-words-and-order)
-- [When I sort a claim's evidence under group headings, `wirth validate` checks the groups.](#evidence_groups_are_checked-when-i-sort-a-claims-evidence-under-group-headings-wirth-validate-checks-the-groups)
+- [When I sort a claim's evidence under group headings, `wirth validate` fails unless every result is in a group and every group has a unique name and evidence.](#evidence_groups_are_checked-when-i-sort-a-claims-evidence-under-group-headings-wirth-validate-fails-unless-every-result-is-in-a-group-and-every-group-has-a-unique-name-and-evidence)
 
 ## [catches_incomplete_contracts] When a contract is incomplete or its evidence does not point at a test that exists, `wirth validate` fails.
 Issue: https://github.com/chalkbadger/wirth/issues/1
@@ -131,7 +131,7 @@ Tests: [tests/contents_list_matches_claims/](../tests/contents_list_matches_clai
 - I write claims whose headings repeat or carry punctuation and code spans, and the links it expects are the ones GitHub renders. `test_anchors.py::test_links_match_the_anchors_github_renders`
 - I put list lines anywhere but directly under the title, and it fails as it did before lists. `test_contents.py::test_list_away_from_the_title_fails_as_today`
 
-## [evidence_groups_are_checked] When I sort a claim's evidence under group headings, `wirth validate` checks the groups.
+## [evidence_groups_are_checked] When I sort a claim's evidence under group headings, `wirth validate` fails unless every result is in a group and every group has a unique name and evidence.
 Issue: https://github.com/chalkbadger/wirth/issues/39
 Tests: [tests/evidence_groups_are_checked/](../tests/evidence_groups_are_checked/)
 
