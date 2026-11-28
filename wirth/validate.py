@@ -235,9 +235,12 @@ def _contract_errors(root, text, label, seen):
             name = (group[1] or "").strip(" \t")
             if problem := _text_error(name):
                 errors.append(f"{number}: group name {problem}")
-            elif name in groups["names"]:
+            # Runs of spaces outside code spans render as one, so they name the same group.
+            key = "`".join(re.sub(r"[ \t]+", " ", part) if index % 2 == 0 else part
+                           for index, part in enumerate(name.split("`")))
+            if not problem and key in groups["names"]:
                 errors.append(f"{number}: duplicate group name {name!r} in this claim")
-            groups["names"].add(name)
+            groups["names"].add(key)
             groups.update(at=number, items=0)
         elif line.startswith("- "):
             needs_evidence = False

@@ -89,9 +89,9 @@ obligation states, in one sentence, one concrete result its named test must show
 something that could fail. Use the fewest claims that still cover the issue's
 required behavior. Guarantees that together define one behavior belong in one
 claim. Split claims only where they could be accepted or rejected independently.
-Use `### <group name>` headings to sort one behavior's evidence by topic, and group a
-claim's evidence once it has more than 20 items. Make a group that could be accepted
-or rejected on its own a separate claim.
+Use `### <group name>` headings to sort one behavior's evidence by topic. Consider
+grouping evidence when a claim has more than 20 items. Make a group that could be
+accepted or rejected on its own a separate claim.
 
 A project keeps its claims in one file, `contracts/claims.md`, read top to bottom;
 split it into one file per capability only when it gets long. A

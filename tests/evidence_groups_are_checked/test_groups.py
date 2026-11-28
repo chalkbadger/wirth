@@ -32,6 +32,8 @@ class EvidenceGroupTests(ValidatorTestCase):
              ["8: duplicate group name 'Topic' in this claim"]),
             ('repeated name with other spacing', '### Topic\n' + ITEM + '###\tTopic \n' + ITEM,
              ["8: duplicate group name 'Topic' in this claim"]),
+            ('repeated name with spaces between words', '### Saved approvals\n' + ITEM + '### Saved  approvals\n' + ITEM,
+             ["8: duplicate group name 'Saved  approvals' in this claim"]),
             ('blank name', '### \n' + ITEM, ['6: group name must be nonblank']),
             ('non-ASCII name', '### Café\n' + ITEM,
              ['6: group name must contain only ASCII letters, digits, spaces, allowed punctuation '
@@ -41,6 +43,12 @@ class EvidenceGroupTests(ValidatorTestCase):
             with self.subTest(case=case):
                 self.write(self.grouped(body))
                 self.assertCountEqual(validate(), ['contracts/one.md:' + error for error in expected])
+        # Spaces inside a code span are significant, so these names differ.
+        self.write(self.grouped('### Run `a b`\n' + ITEM + '### Run `a  b`\n' + ITEM))
+        self.assertEqual(validate(), [])
+        # An empty last group is reported when the next claim starts.
+        self.write(self.grouped('### Topic\n' + ITEM + '### Empty\n') + '\n' + self.claim('second'))
+        self.assertCountEqual(validate(), ['contracts/one.md:8: group must have at least one evidence item'])
 
     def test_group_heading_before_the_first_claim_fails_as_today(self):
         self.write(self.text.replace('## [', '### Topic\n## ['))
