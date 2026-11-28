@@ -33,13 +33,25 @@ RENDERED = [
     ('# Probe', 'probe-2'),
 ]
 
+# A title that takes a later claim's anchor, as rendered at
+# https://github.com/chalkbadger/wirth/blob/9e2f2630998da0a010ecc5425385dab47003b408/probe/title.md
+TITLE_COLLISION = [('# Receipt saved', 'receipt-saved'), ('## [receipt] Saved', 'receipt-saved-1')]
+
+
+def expected_list(rendered):
+    return [f'- [{heading.split("] ", 1)[1]}](#{anchor})'
+            for heading, anchor in rendered if re.match(r'## \[', heading)]
+
 
 class AnchorTests(ValidatorTestCase):
-    def test_links_match_the_anchors_github_renders(self):
-        title, *headings = [heading for heading, _ in RENDERED]
+    def contents_shown(self, rendered):
+        title, *headings = [heading for heading, _ in rendered]
         self.write(title + '\n\n- [A claim](#a-claim)\n\n' + '\n\n'.join(headings) + '\n')
-        expected = [f'- [{heading.split("] ", 1)[1]}](#{anchor})'
-                    for heading, anchor in RENDERED if re.match(r'## \[', heading)]
         contents = [error for error in validate() if 'contents list' in error]
         self.assertEqual(len(contents), 1, validate())
-        self.assertEqual(contents[0].split('\n')[1:], expected)
+        return contents[0].split('\n')[1:]
+
+    def test_links_match_the_anchors_github_renders(self):
+        for rendered in [RENDERED, TITLE_COLLISION]:
+            with self.subTest(title=rendered[0][0]):
+                self.assertEqual(self.contents_shown(rendered), expected_list(rendered))

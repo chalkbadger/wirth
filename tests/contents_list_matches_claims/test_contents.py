@@ -25,6 +25,8 @@ class ContentsListTests(ValidatorTestCase):
     def test_matching_list_passes(self):
         self.write(self.contract(FIRST, SECOND))
         self.assertEqual(validate(), [])
+        self.write(self.contract(FIRST + ' ', SECOND + '\t'))
+        self.assertEqual(validate(), [])
         # Blank lines between list items keep one list.
         self.write(self.contract(FIRST, '', SECOND))
         self.assertEqual(validate(), [])
@@ -52,7 +54,8 @@ class ContentsListTests(ValidatorTestCase):
             'contracts/one.md:4: contract must have at least one claim'])
 
     def test_one_line_shows_every_line_the_list_needs(self):
-        for first in [FIRST, '- [Something else](#elsewhere)']:
+        # A trailing space or tab is invisible on GitHub, so it does not change the line.
+        for first in [FIRST, '- [Something else](#elsewhere)', FIRST + ' ', '- [x](#x) \t']:
             with self.subTest(first=first):
                 self.write(self.contract(first))
                 result = self.cli('validate')

@@ -1,3 +1,0 @@
-# Receipt saved
-
-## [receipt] Saved
