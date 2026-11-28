@@ -94,9 +94,9 @@ claim's evidence once it has more than 20 items. Make a group that could be acce
 or rejected on its own a separate claim.
 
 A project keeps its claims in one file, `contracts/claims.md`, read top to bottom;
-split it into one file per capability only when it gets long. Open each
-contract with a [contents list](usage.md#local-contract-validation) under its title, so
-a reader sees the claims at a glance. Each claim's ID is a
+split it into one file per capability only when it gets long. A
+[contents list](usage.md#local-contract-validation) under the title gives readers an
+overview of the claims. Each claim's ID is a
 short gist of the claim in underscores, such as `failures_say_what_to_fix`, unique
 across all contract files, and is also the name of the claim's test folder. Each test lives in the folder of the claim
 it proves; a test that would serve two claims moves or splits.

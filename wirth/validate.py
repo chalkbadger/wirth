@@ -151,8 +151,10 @@ def _contract_errors(root, text, label, seen):
     # An optional contents list sits directly under the title.
     contents = []
     if title.startswith("# "):
-        while len(contents) < len(body) and CONTENTS_LINE.fullmatch(body[len(contents)][1]):
-            contents.append(body[len(contents)])
+        # Trailing spaces and tabs are invisible on GitHub, so they do not change a line.
+        while len(contents) < len(body) and CONTENTS_LINE.fullmatch(body[len(contents)][1].rstrip(" \t")):
+            number, line = body[len(contents)]
+            contents.append((number, line.rstrip(" \t")))
         body = body[len(contents):]
     if contents:
         errors.extend(_contents_errors(contents, _contents_lines(source_lines)))
