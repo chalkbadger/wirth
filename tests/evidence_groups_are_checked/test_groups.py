@@ -30,6 +30,8 @@ class EvidenceGroupTests(ValidatorTestCase):
              ['8: group must have at least one evidence item']),
             ('repeated name', '### Topic\n' + ITEM + '### Topic\n' + ITEM,
              ["8: duplicate group name 'Topic' in this claim"]),
+            ('repeated name with other spacing', '### Topic\n' + ITEM + '###\tTopic \n' + ITEM,
+             ["8: duplicate group name 'Topic' in this claim"]),
             ('blank name', '### \n' + ITEM, ['6: group name must be nonblank']),
             ('non-ASCII name', '### Café\n' + ITEM,
              ['6: group name must contain only ASCII letters, digits, spaces, allowed punctuation '

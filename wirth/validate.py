@@ -20,6 +20,7 @@ ITEM_SHAPE = "- <result> `file::test_name`"
 CONTENTS_LINE = re.compile(r"- \[.*\]\(#.*\)")
 HEADING = re.compile(r"#{1,6}(?:[ \t]+(.*))?")
 CLAIM_HEADING = re.compile(r"## \[([^\]]*)\](?: (.*))?")
+GROUP_HEADING = re.compile(r"###(?:[ \t]+(.*))?")
 
 
 def _validate_name(name, kind):
@@ -176,8 +177,6 @@ def _contract_errors(root, text, label, seen):
         if needs_evidence:
             errors.append(f"{claim_at}: claim must have at least one evidence item")
         finish_group()
-        for loose in groups["loose"] if groups["names"] else []:
-            errors.append(f"{loose}: put this result under a group heading, because its claim has groups")
 
     for number, line in body:
         if due and due[0] == "Issue":
@@ -226,9 +225,12 @@ def _contract_errors(root, text, label, seen):
             ids.add(identifier)
             if problem := _text_error(claim):
                 errors.append(f"{number}: claim {problem}")
-        elif groups["allowed"] and (line == "###" or line.startswith("### ")):
+        elif groups["allowed"] and (group := GROUP_HEADING.fullmatch(line)):
             finish_group()
-            name = line[4:]
+            # Results above the first group are reported here, all before this line.
+            for loose in [] if groups["names"] else groups["loose"]:
+                errors.append(f"{loose}: put this result under a group heading, because its claim has groups")
+            name = (group[1] or "").strip(" \t")
             if problem := _text_error(name):
                 errors.append(f"{number}: group name {problem}")
             elif name in groups["names"]:
